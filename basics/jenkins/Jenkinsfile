@@ -5,8 +5,7 @@ node {
      sh "git rev-parse --short HEAD > .git/commit-id"
      commit_id = readFile('.git/commit-id').trim()
    }
-   stages {
-       stage ("build & sonar") {
+    stage ("build & sonar") {
             parallel {
                 stage('dockerbuild') {
                 def app = docker.build("yanivomc/docker-nodejs-demo:${commit_id}", '.')
@@ -15,7 +14,6 @@ node {
                     def app = docker.build("yanivomc/sonar:${commit_id}", '-f sonarbuild' , '.')                             
                 }
             }                         
-        }
     }
    stage('docker build/push') {            
      docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
